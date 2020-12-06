@@ -6,6 +6,14 @@ def home_view(request, *args, **kwargs):
   # return HttpResponse("<h1>Hello Django!</h1>")
   return render(request, 'pages/home.html', context={}, status=200)
 
+def tweet_list_view(request, *args, **kwargs):
+  tweets = Tweet.objects.all()
+  tweets_list = [{"id": x.id, "content": x.content} for x in tweets]
+  data = {
+    "response": tweets_list
+  }
+  return JsonResponse(data)
+
 def tweet_detail_view(request, tweet_id, *args, **kwargs):  
   data = {
     "id": tweet_id

@@ -1,5 +1,29 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h1 class="text-6xl">Welcome to Django-Twitter</h1>
+<main>
+  <div>
+    <div id="tweet-container"></div>
+  </div>
+</main>
+
+<script>
+  const tweetContainer = document.querySelector("#tweet-container");
+  tweetContainer.innerHTML = "Loading Tweets...";
+
+  const fetchTweets = async () => {
+    let response = await fetch("/tweets");
+    let data = await response.json();
+    const listedTweets = data.response;
+    let tweets_view = "";
+    if (listedTweets.length > 0) {
+      listedTweets.forEach((tweet) => {
+        let currentTweet = `<div id="tweet">${tweet.content}</div>`;
+        tweets_view += currentTweet;
+      });
+    }
+    tweetContainer.innerHTML = tweets_view;
+  };
+
+  fetchTweets();
+</script>
 {% endblock content %}
