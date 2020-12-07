@@ -1,14 +1,59 @@
 {% extends 'base.html' %} {% block content %}
-<h1 class="text-6xl">Welcome to Django-Twitter</h1>
-<main>
-  <div>
-    <div id="tweet-container"></div>
-  </div>
-</main>
+<div class="container mx-auto px-8 py-4">
+  <main class="grid grid-cols-5 gap-4">
+    <div class="col-span-3 p-4">
+      <form action="/create" method="POST" id="create-tweet-form">
+        {% csrf_token %}
+        <div>
+          <input type="hidden" value="/" name="next" />
+          <textarea
+            name="content"
+            id="content"
+            placeholder="What's happening?"
+            class="w-full p-2 border-2 rounded border-pink-500 focus:border-pink-600 outline-none"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-pink-600 text-white rounded outline-none"
+        >
+          Tweet
+        </button>
+      </form>
+      <h1 class="text-2xl mt-4">Latest Tweets</h1>
+      <div id="tweet-container" class="mt-4"></div>
+    </div>
+    <div class="col-span-2"></div>
+  </main>
+</div>
 
 <script>
   const tweetContainer = document.querySelector("#tweet-container");
+  const tweetForm = document.querySelector("#create-tweet-form");
+
   tweetContainer.innerHTML = "Loading Tweets...";
+
+  tweetForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(e.target);
+    console.log(formData);
+    const endpoint = form.getAttribute("action");
+    const method = form.getAttribute("method");
+
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open(method, endpoint);
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    xhr.onload = function () {
+      if (xhr.status === 201) {
+        const serverResponse = xhr.response;
+        tweetContainer.innerHTML += `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${serverResponse.content}</div>`;
+      }
+    };
+    xhr.send(formData);
+  });
 
   const fetchTweets = async () => {
     let response = await fetch("/tweets");
@@ -17,7 +62,7 @@
     let tweets_view = "";
     if (listedTweets.length > 0) {
       listedTweets.forEach((tweet) => {
-        let currentTweet = `<div id="tweet">${tweet.content}</div>`;
+        let currentTweet = `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${tweet.content}</div>`;
         tweets_view += currentTweet;
       });
     }
