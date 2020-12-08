@@ -12,10 +12,12 @@
             placeholder="What's happening?"
             class="w-full p-2 border-2 rounded border-pink-500 focus:border-pink-600 outline-none"
           ></textarea>
+          <div class="text-xs text-red-600" id="error"></div>
         </div>
         <button
           type="submit"
-          class="px-4 py-2 bg-pink-600 text-white rounded outline-none"
+          class="px-4 py-2 mt-2 bg-pink-600 text-white rounded outline-none"
+          id="tweet-btn"
         >
           Tweet
         </button>
@@ -30,6 +32,9 @@
 <script>
   const tweetContainer = document.querySelector("#tweet-container");
   const tweetForm = document.querySelector("#create-tweet-form");
+  const contentArea = document.querySelector("#content");
+  const tweetButton = document.querySelector("#tweet-btn");
+  const error = document.querySelector("#error");
 
   tweetContainer.innerHTML = "Loading Tweets...";
 
@@ -52,6 +57,10 @@
           `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${serverResponse.content}</div>` +
           tweetContainer.innerHTML;
         form.reset();
+        error.innerHTML = "";
+      } else if (xhr.status === 400) {
+        const serverResponse = xhr.response;
+        error.innerHTML = serverResponse.content[0];
       }
     };
     xhr.send(formData);
