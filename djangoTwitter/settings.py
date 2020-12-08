@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 LOGIN_URL = '/login'
+MAX_LENGTH_TWEET = 240
 
 
 # Application definition
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'tweets'
 ]
 
