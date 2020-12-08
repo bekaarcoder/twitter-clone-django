@@ -26,6 +26,7 @@ SECRET_KEY = '$n7=^*n(pe0lv@4#yb=%1f@0z&7b@+4rb-hp1fk8v1hsa77$^_'
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
+LOGIN_URL = '/login'
 
 
 # Application definition
