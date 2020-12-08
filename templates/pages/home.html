@@ -37,7 +37,6 @@
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(e.target);
-    console.log(formData);
     const endpoint = form.getAttribute("action");
     const method = form.getAttribute("method");
 
@@ -49,7 +48,10 @@
     xhr.onload = function () {
       if (xhr.status === 201) {
         const serverResponse = xhr.response;
-        tweetContainer.innerHTML += `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${serverResponse.content}</div>`;
+        tweetContainer.innerHTML =
+          `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${serverResponse.content}</div>` +
+          tweetContainer.innerHTML;
+        form.reset();
       }
     };
     xhr.send(formData);
