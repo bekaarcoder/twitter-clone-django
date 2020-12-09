@@ -13,4 +13,6 @@ class TweetSerializer(serializers.ModelSerializer):
   def validate_content(self, value):
     if len(value) > MAX_LENGTH:
       raise serializers.ValidationError("Tweet is too long.")
+    elif len(value) < 1:
+      raise serializers.ValidationError("Nothing to tweet.")
     return value

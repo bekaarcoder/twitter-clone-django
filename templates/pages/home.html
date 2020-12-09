@@ -69,7 +69,7 @@
   const fetchTweets = async () => {
     let response = await fetch("/tweets");
     let data = await response.json();
-    const listedTweets = data.response;
+    const listedTweets = data;
     let tweets_view = "";
     if (listedTweets.length > 0) {
       listedTweets.forEach((tweet) => {
