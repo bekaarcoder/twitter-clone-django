@@ -6,7 +6,8 @@ from .models import Tweet
 from .forms import TweetForm
 from .serializers import TweetSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -16,6 +17,7 @@ def home_view(request, *args, **kwargs):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def tweet_create_view(request, *args, **kwargs):
   serializer = TweetSerializer(data=request.POST)
   if serializer.is_valid(raise_exception=True):
@@ -40,6 +42,22 @@ def tweet_detail_view(request, tweet_id, *args, **kwargs):
   serializer = TweetSerializer(obj)
   return Response(serializer.data, status=200)
 
+
+@api_view(['DELETE', 'POST'])
+@permission_classes([IsAuthenticated])
+def tweet_delete_view(request, tweet_id, *args, **kwargs):
+  tweet = Tweet.objects.filter(id=tweet_id)
+  if not tweet.exists():
+    return Response({}, status=404)
+  tweet = tweet.filter(user=request.user)
+  if not tweet.exists():
+    return Response({'message': 'Unauthorized'}, status=401)
+  obj = tweet.first()
+  obj.delete()
+  return Response({'message': 'Tweet deleted successfully'}, status=200)
+
+
+# Implementation using Pure Django - Not usable
 
 def tweet_create_view_django(request, *args, **kwargs):
   user = request.user
