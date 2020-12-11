@@ -38,6 +38,24 @@
 
   tweetContainer.innerHTML = "Loading Tweets...";
 
+  const handleLike = async (tweet_id, like_count) => {
+    console.log(tweet_id, like_count);
+    const url = "/api/tweets/action";
+    const method = "POST";
+    const data = {
+      id: tweet_id,
+      action: "like",
+    };
+
+    let response = await fetch(url, {
+      method: method,
+      body: JSON.stringify(data),
+      headers: { "Content-type": "application/json" },
+    });
+    let response_data = await response.json();
+    console.log(response_data);
+  };
+
   tweetForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const form = e.target;
@@ -54,8 +72,14 @@
       if (xhr.status === 201) {
         const serverResponse = xhr.response;
         tweetContainer.innerHTML =
-          `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${serverResponse.content}</div>` +
-          tweetContainer.innerHTML;
+          `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">
+            <div class="pb-2">${serverResponse.content}</div>
+            <span class="flex cursor-pointer" onClick="handleLike(${serverResponse.id}, ${serverResponse.likes})">
+              <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg> ${serverResponse.likes}
+            </span>
+          </div>` + tweetContainer.innerHTML;
         form.reset();
         error.innerHTML = "";
       } else if (xhr.status === 400) {
@@ -70,10 +94,18 @@
     let response = await fetch("/tweets");
     let data = await response.json();
     const listedTweets = data;
+    console.log(listedTweets);
     let tweets_view = "";
     if (listedTweets.length > 0) {
       listedTweets.forEach((tweet) => {
-        let currentTweet = `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">${tweet.content}</div>`;
+        let currentTweet = `<div id="tweet" class=" rounded border border-gray-300 p-2 my-4">
+          <div class="pb-2">${tweet.content}</div>
+          <span class="flex cursor-pointer" onClick="handleLike(${tweet.id}, ${tweet.likes})">
+            <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg> ${tweet.likes}
+          </span>
+        </div>`;
         tweets_view += currentTweet;
       });
     }
