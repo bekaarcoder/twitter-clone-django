@@ -4,13 +4,14 @@
   "description": "",
   "main": "postcss.config.js",
   "dependencies": {
-    "autoprefixer": "^10.0.4",
-    "postcss": "^8.1.14",
-    "tailwindcss": "^2.0.1"
+    "autoprefixer": "^10.1.0",
+    "postcss": "^8.2.1",
+    "tailwindcss": "^2.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "build-css": "tailwindcss build css/tailwind.css -o ../tweets/static/tweets/tailwind-output.css"
+    "build-css": "tailwindcss build css/tailwind.css -o ../django-twitter-web/src/index.css",
+    "build-css-django": "tailwindcss build css/tailwind.css -o ../tweets/static/tweets/tailwind-output.css"
   },
   "keywords": [],
   "author": "",
